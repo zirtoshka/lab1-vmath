@@ -1,4 +1,6 @@
 
+import exceptions.DeterminantException;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Arrays;
@@ -15,7 +17,7 @@ public class MatrixManger {
         }
     }
 
-    public static BigDecimal[][] straightRunning(BigDecimal[][] matrix) {
+    public static BigDecimal[][] straightRunning(BigDecimal[][] matrix) throws DeterminantException{
         /*todo Если в процессе исключения неизвестных, коэффициенты:
        todo 𝒂𝟏𝟏,𝒂𝟐𝟐𝟏,𝒂𝟑𝟑𝟐…. = 0 ,
                 тогда необходимо соответственным образом переставить уравнения системы*/
@@ -23,9 +25,18 @@ public class MatrixManger {
         int cols = rows + 1;
         for (int i = 0; i < rows - 1; i++) {
             BigDecimal a = matrix[i][i];
-            if (a.compareTo(BigDecimal.ZERO)==0){
-                System.out.println("ploho");
-                System.exit(1);
+            int indexTmp=i+1;
+            while (a.compareTo(BigDecimal.ZERO)==0){
+                if(indexTmp>=rows){
+//                    System.out.println("ochen' ploho");
+                    throw new DeterminantException();
+                }
+                BigDecimal[] tmp= matrix[indexTmp];
+                matrix[i+1]=matrix[i];
+                matrix[i]=tmp;
+//                System.out.println("ploho");
+                a=matrix[i][i];
+                indexTmp++;
             }
             for (int n = i + 1; n < rows; n++) {
                 BigDecimal b = matrix[n][i];
@@ -37,9 +48,11 @@ public class MatrixManger {
                 matrix[n] = tmp;
             }
         }
-
-        return (matrix);
-//            break;
+        if (checkDeterminant(matrix)){
+            return matrix;
+        }else {
+            throw new DeterminantException();
+        }
     }
 
     public static BigDecimal[] reverseRunning(BigDecimal[][] matrix) {
@@ -82,7 +95,14 @@ public class MatrixManger {
     }
 
 
-    public static void checkDeterminant(BigDecimal[][] matrix) {
+    private static boolean checkDeterminant(BigDecimal[][] matrix) {
+        int rows=matrix.length;
 
+        for(int i=0;i<rows;i++){
+            if (matrix[i][i].equals(0)){
+                return false;
+            }
+        }
+        return true;
     }
 }
