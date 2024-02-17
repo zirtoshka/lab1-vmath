@@ -28,13 +28,11 @@ public class MatrixManger {
             int indexTmp=i+1;
             while (a.compareTo(BigDecimal.ZERO)==0){
                 if(indexTmp>=rows){
-//                    System.out.println("ochen' ploho");
                     throw new DeterminantException();
                 }
                 BigDecimal[] tmp= matrix[indexTmp];
                 matrix[i+1]=matrix[i];
                 matrix[i]=tmp;
-//                System.out.println("ploho");
                 a=matrix[i][i];
                 indexTmp++;
             }
@@ -48,6 +46,7 @@ public class MatrixManger {
                 matrix[n] = tmp;
             }
         }
+
         if (checkDeterminant(matrix)){
             return matrix;
         }else {
@@ -56,6 +55,7 @@ public class MatrixManger {
     }
 
     public static BigDecimal[] reverseRunning(BigDecimal[][] matrix) {
+
         int rows = matrix.length;
         int cols = rows + 1;
         BigDecimal[] res = new BigDecimal[rows];
@@ -66,8 +66,7 @@ public class MatrixManger {
             for (int j = cols - 2; j > i; j--) { //это иксы справа
 
                 b = b.subtract(matrix[i][j].multiply(res[j]));
-//                System.out.println("res[j] "+res[j]);
-//                System.out.println(matrix[i][j]);
+
             }
             x = b.divide(matrix[i][i], new MathContext(5));
 //            System.out.println("x "+x+"b "+b);
@@ -99,7 +98,7 @@ public class MatrixManger {
         int rows=matrix.length;
 
         for(int i=0;i<rows;i++){
-            if (matrix[i][i].equals(0)){
+            if (matrix[i][i].compareTo(BigDecimal.ZERO)==0){
                 return false;
             }
         }
