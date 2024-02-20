@@ -14,16 +14,11 @@ public class FileManager {
              int rows=scanner.nextInt(); // <= 20
             int cols = rows + 1;
             BigDecimal[][] matrix = new BigDecimal[rows][cols];
-
-            // Чтение данных из файла и заполнение массива
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
-                    // Чтение следующего целого числа из файла
                     matrix[i][j] = new BigDecimal(scanner.next());
                 }
             }
-
-            // Закрытие сканера после чтения файла
             scanner.close();
             return matrix;
         }catch (Exception e)   {
@@ -31,7 +26,6 @@ public class FileManager {
         }
 
     }
-//todo validation and exceptions
 
 }
 

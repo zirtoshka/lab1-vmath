@@ -6,18 +6,28 @@ import java.math.MathContext;
 import java.util.Arrays;
 
 public class MatrixManger {
-    public static void printMatrix(BigDecimal[][] matrix) {
+    private int k;
+
+    public void setK(int k) {
+        this.k = k;
+    }
+
+    public int getK() {
+        return k;
+    }
+
+    public  void printMatrix(BigDecimal[][] matrix) {
         int rows = matrix.length;
         int cols = rows + 1;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                System.out.printf("%7s", matrix[i][j].toString()+" ");
+                System.out.printf("%15s", matrix[i][j].round(MathContext.DECIMAL32).toString()+" ");
             }
             System.out.println();
         }
     }
 
-    public static BigDecimal[][] straightRunning(BigDecimal[][] matrix) throws DeterminantException{
+    public  BigDecimal[][] straightRunning(BigDecimal[][] matrix) throws DeterminantException{
         /*todo Если в процессе исключения неизвестных, коэффициенты:
        todo 𝒂𝟏𝟏,𝒂𝟐𝟐𝟏,𝒂𝟑𝟑𝟐…. = 0 ,
                 тогда необходимо соответственным образом переставить уравнения системы*/
@@ -35,6 +45,7 @@ public class MatrixManger {
                 matrix[i]=tmp;
                 a=matrix[i][i];
                 indexTmp++;
+                setK(getK()+1);
             }
             for (int n = i + 1; n < rows; n++) {
                 BigDecimal b = matrix[n][i];
@@ -47,14 +58,14 @@ public class MatrixManger {
             }
         }
 
-        if (checkDeterminant(matrix)){
+        if (getDeterminant(matrix, k).compareTo(BigDecimal.ZERO)!=0){
             return matrix;
         }else {
             throw new DeterminantException();
         }
     }
 
-    public static BigDecimal[] reverseRunning(BigDecimal[][] matrix) {
+    public  BigDecimal[] reverseRunning(BigDecimal[][] matrix) {
 
         int rows = matrix.length;
         int cols = rows + 1;
@@ -78,7 +89,7 @@ public class MatrixManger {
 
     }
 
-    public static void discrepancyOutput(BigDecimal[][] matrix, BigDecimal[] x) {
+    public  void discrepancyOutput(BigDecimal[][] matrix, BigDecimal[] x) {
         int rows = matrix.length;
         int cols = rows + 1;
         for (int i = 0; i < rows; i++) {
@@ -94,14 +105,23 @@ public class MatrixManger {
     }
 
 
-    private static boolean checkDeterminant(BigDecimal[][] matrix) {
+    public   BigDecimal getDeterminant(BigDecimal[][] matrix, int k) {
         int rows=matrix.length;
-
+        BigDecimal det = BigDecimal.valueOf(Math.pow(-1, k));
         for(int i=0;i<rows;i++){
-            if (matrix[i][i].compareTo(BigDecimal.ZERO)==0){
-                return false;
+            det=det.multiply(matrix[i][i]);
+        }
+        return det;
+    }
+
+
+    public BigDecimal[][] generateMatrix(int n){
+        BigDecimal[][] matrix = new BigDecimal[n][n+1];
+        for (int i =0; i<n;i++){
+            for ( int j=0;j<=n;j++){
+                matrix[i][j]=new BigDecimal(Math.random()*100, MathContext.DECIMAL32);
             }
         }
-        return true;
+        return matrix;
     }
 }
